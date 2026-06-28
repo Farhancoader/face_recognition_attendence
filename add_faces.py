@@ -1,4 +1,8 @@
 import cv2
+import pickle
+import numpy as np
+import os
+
 def get_camera():
     cap = cv2.VideoCapture(1)
 
@@ -21,6 +25,7 @@ facedetect = cv2.CascadeClassifier(
 
 faces_data = []
 i=0
+name = input("your name: ")
 while True:
     ret, frame = cap.read()
 
@@ -47,3 +52,28 @@ while True:
         break
 cap.release()
 cv2.destroyAllWindows()
+
+faces_data = np.asarray(faces_data)
+faces_data = faces_data.reshape(faces_data.shape[0], -1)
+
+if "names.pkl" not in os.listdir("data/"):
+    names = [name]*100
+    with open("names.pkl", "wb") as f:
+        pickle.dump(names,f)
+else:
+    with open("names.pkl", "rb") as f:
+        names = pickle.load(f)
+    names = names + [name]*100
+    with open("names.pkl", "wb") as f:
+        pickle.dump(names,f)
+
+if "faces_data.pkl" not in os.listdir("data/"):
+    with open("faces_data.pkl", "wb") as f:
+        pickle.dump(faces_data,f)
+else:
+    with open("faces_data.pkl", "rb") as f:
+        faces = pickle.load(f)
+    faces = np.append([faces, faces_data],axis=0)
+
+    with open("faces_data.pkl", "wb") as f:
+        pickle.dump(faces,f)
