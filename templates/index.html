@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Face Recognition Attendance</title>
+  <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+  <div class="app">
+    <header class="header">
+      <div class="header-content">
+        <div class="brand">
+          <div class="brand-icon">FR</div>
+          <div>
+            <h1>Face Recognition Attendance</h1>
+            <p class="subtitle">Mark and view daily attendance from your browser</p>
+          </div>
+        </div>
+        <div class="status-pill" id="modelStatus">
+          <span class="status-dot"></span>
+          <span>Checking model...</span>
+        </div>
+      </div>
+    </header>
+
+    <nav class="tabs">
+      <button class="tab active" data-tab="mark">Mark Attendance</button>
+      <button class="tab" data-tab="register">Register Face</button>
+      <button class="tab" data-tab="records">Attendance Records</button>
+    </nav>
+
+    <main>
+      <section id="markPanel" class="panel active">
+        <div class="mark-layout">
+          <div class="camera-card">
+            <div class="camera-wrap">
+              <video id="video" autoplay playsinline muted></video>
+              <canvas id="overlay"></canvas>
+              <div id="cameraPlaceholder" class="camera-placeholder">
+                <p>Camera preview will appear here</p>
+                <button id="startCameraBtn" class="btn btn-primary">Start Camera</button>
+              </div>
+            </div>
+            <div class="camera-actions">
+              <button id="stopCameraBtn" class="btn btn-secondary" disabled>Stop Camera</button>
+              <button id="markBtn" class="btn btn-success" disabled>Mark Attendance</button>
+            </div>
+          </div>
+
+          <div class="info-card">
+            <h2>Recognition</h2>
+            <div class="recognition-box">
+              <span class="label">Detected Name</span>
+              <p id="detectedName" class="detected-name">—</p>
+            </div>
+            <div class="recognition-box">
+              <span class="label">Status</span>
+              <p id="recognitionStatus" class="status-text">Start the camera to begin</p>
+            </div>
+            <div id="toast" class="toast hidden"></div>
+            <div class="tips">
+              <h3>How it works</h3>
+              <ul>
+                <li>Allow camera access when prompted</li>
+                <li>Look at the camera — your name appears automatically</li>
+                <li>Click <strong>Mark Attendance</strong> to save today's entry</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="registerPanel" class="panel">
+        <div class="mark-layout">
+          <div class="camera-card">
+            <div class="camera-wrap">
+              <video id="registerVideo" autoplay playsinline muted></video>
+              <canvas id="registerOverlay"></canvas>
+              <div id="registerCameraPlaceholder" class="camera-placeholder">
+                <p>Camera preview will appear here</p>
+              </div>
+            </div>
+            <div class="camera-actions">
+              <button id="registerStartCameraBtn" class="btn btn-primary">Start Camera</button>
+              <button id="registerStopCameraBtn" class="btn btn-secondary" disabled>Stop Camera</button>
+            </div>
+          </div>
+
+          <div class="info-card">
+            <h2>Register New Person</h2>
+            <div class="form-group">
+              <label for="registerName">Full Name</label>
+              <input id="registerName" type="text" placeholder="Enter name to register">
+            </div>
+
+            <div class="progress-wrap">
+              <div class="progress-header">
+                <span class="label">Samples captured</span>
+                <span id="registerProgressText">0 / 100</span>
+              </div>
+              <div class="progress-bar">
+                <div id="registerProgressFill" class="progress-fill"></div>
+              </div>
+            </div>
+
+            <div class="recognition-box">
+              <span class="label">Status</span>
+              <p id="registerStatus" class="status-text">Enter a name and start the camera</p>
+            </div>
+
+            <div id="registerToast" class="toast hidden"></div>
+
+            <div class="camera-actions">
+              <button id="beginRegisterBtn" class="btn btn-primary" disabled>Begin Capture</button>
+              <button id="saveRegisterBtn" class="btn btn-success" disabled>Save Person</button>
+              <button id="cancelRegisterBtn" class="btn btn-secondary" disabled>Cancel</button>
+            </div>
+
+            <div class="tips">
+              <h3>Registration tips</h3>
+              <ul>
+                <li>Look straight at the camera in good lighting</li>
+                <li>Slowly turn your head left and right while capturing</li>
+                <li>Capture at least 20 samples (100 recommended)</li>
+              </ul>
+            </div>
+
+            <div class="registered-list">
+              <h3>Registered People</h3>
+              <ul id="registeredPeopleList">
+                <li class="empty">Loading...</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="recordsPanel" class="panel">
+        <div class="records-toolbar">
+          <div>
+            <h2>Attendance Sheet</h2>
+            <p id="recordsDateLabel" class="subtitle"></p>
+          </div>
+          <div class="records-controls">
+            <label for="dateSelect">Date</label>
+            <select id="dateSelect"></select>
+            <button id="refreshRecordsBtn" class="btn btn-secondary">Refresh</button>
+          </div>
+        </div>
+
+        <div class="table-card">
+          <table>
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Name</th>
+                <th>Time</th>
+              </tr>
+            </thead>
+            <tbody id="recordsBody">
+              <tr><td colspan="3" class="empty">Loading...</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p id="recordsCount" class="records-count"></p>
+      </section>
+    </main>
+  </div>
+
+  <canvas id="captureCanvas" hidden></canvas>
+  <script src="/static/js/app.js"></script>
+</body>
+</html>

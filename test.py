@@ -19,7 +19,11 @@ def get_camera():
     if cap.isOpened():
         print("Using USB camera")
         return cap
-
+    cap = cv2.VideoCapture(2)
+    if cap.isOpened():
+        print("Using camera 2")
+        return cap
+    
     cap = cv2.VideoCapture(0)
     if cap.isOpened():
         print("Using default camera")
